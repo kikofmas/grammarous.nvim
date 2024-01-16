@@ -1,14 +1,18 @@
-vim-grammarous
+grammarous.nvim
 ==============
+This project started as a fork of [vim-grammarous](https://github.com/rhysd/vim-grammarous) and seeks to solve some issues users encountered. The goal is to, eventually, fully transition it to Lua.
 
-vim-grammarous is a powerful grammar checker for Vim. Simply do `:GrammarousCheck` to see the powerful checking.
+grammarous.nvim is a powerful grammar checker for Vim. Simply do `:GrammarousCheck` to see the powerful checking.
 This plugin automatically downloads [LanguageTool](https://www.languagetool.org/), which requires Java 8+.
 
-This plugin can use job feature on Vim 8.0.27 (or later) or Neovim. It enables asynchronous command execution so you don't need to
+This plugin can use job feature on Neovim. It enables asynchronous command execution so you don't need to
 be blocked until the check has been done on Vim8+ or Neovim.
 
 ![demo screen cast](https://github.com/rhysd/ss/blob/master/vim-grammarous/demo.gif?raw=true)
 
+
+## Disclaimer
+This is started as a personal project because I couldn't make the plugin work correctly and is a way for me to learn Lua. If you find any issues please do report them but I can't promisse I'll be able to fix them. Pull Requests are more than welcome.
 
 ## Commands
 
@@ -81,25 +85,6 @@ This mapping is available when [vim-operator-user](https://github.com/kana/vim-o
 | Mappings                      | Description                            |
 | ----------------------------- |:-------------------------------------- |
 | `<Plug>(operator-grammarous)` | Execute grammar check to a text object |
-
-### `grammarous` unite.vim source
-
-If you are [unite.vim](https://github.com/Shougo/unite.vim) user, `grammarous` unite source is available to look and search the error list incrementally.
-To the candidates of the list, you can do the actions which are the same as ones in the info window. (`fixit`, `remove error` and `disable rule`)
-Execute below command in the buffer already checked or you want to check.
-
-```
-:Unite grammarous
-```
-
-### `grammarous` denite.nvim source
-
-For [denite.nvim](https://github.com/Shougo/denite.nvim) users, `grammarous` denite source is available. Note that the kind is currently set to `file`,
-which means that actions a user can use are limited to open(jump), preview, etc. Execute below command in the buffer already checked.
-
-```
-:Denite grammarous
-```
 
 ## Fix examples
 
@@ -246,7 +231,7 @@ Pull requests are welcome. None of them is too short.
 
 ## License
 
-    Copyright (c) 2014 rhysd
+    Copyright (c) 2024 kikofmas
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
