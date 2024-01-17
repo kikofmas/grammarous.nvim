@@ -283,7 +283,8 @@ function! s:on_check_done_vim8(channel) abort
     if xml ==# ''
         return
     endif
-    call s:set_errors_from_xml_string(xml)
+    " call s:set_errors_from_xml_string(xml)
+    call s:set_errors_from_json_string(xml)
 endfunction
 
 function! s:on_check_exit_vim8(channel, status) abort
@@ -303,7 +304,8 @@ function! s:on_exit_nvim(job, status, event) abort dict
         return
     endif
 
-    call s:set_errors_from_xml_string(self._stdout)
+    " call s:set_errors_from_xml_string(self._stdout)
+    call s:set_errors_from_json_string(xml)
 endfunction
 
 function! s:on_output_nvim(job, lines, event) abort dict
