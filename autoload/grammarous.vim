@@ -181,7 +181,7 @@ function! s:set_errors_to_location_list() abort
 endfunction
 
 function! GetLineColFromOffset(text, offset)
-    let line_num = 1
+    let line_num = 0
     let char_count = 0
 
     for line in a:text
@@ -189,7 +189,7 @@ function! GetLineColFromOffset(text, offset)
         let char_count += len(line) + 1
         if char_count >= a:offset
             " Calculate column number (subtract the current line's characters and add 1 for the start position)
-            let col_num = a:offset - (char_count - len(line)) + 1
+            let col_num = a:offset - (char_count - len(line))
             return [line_num, col_num]
         endif
         let line_num += 1
@@ -214,8 +214,11 @@ function! grammarous#get_errors_from_json(json)
         let error.fromx = start_pos[1]  " Start column
         let error.toy = end_pos[0]  " End line
         let error.tox = end_pos[1]  " End column
+        let error.context = match.context.text
+        let error.contextoffset = match.context.offset
+        let error.errorlength = match.length
         let error.category = match.rule.category.name
-        let error.replacements = map(match.replacements, 'v:val.value')
+        let error.replacements = join(map(copy(match.replacements), 'v:val.value'), '#')
         call add(errors, error)
     endfor
     return errors
