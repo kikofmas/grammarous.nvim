@@ -413,7 +413,8 @@ function! s:invoke_check(range_start, ...)
         call grammarous#error("Command '%s' failed:\n%s", cmd, xml)
         return
     endif
-    call s:set_errors_from_xml_string(xml)
+    " call s:set_errors_from_xml_string(xml)
+    call s:set_errors_from_json_string(xml)
 endfunction
 
 function! s:sanitize(s)
