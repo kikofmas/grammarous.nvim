@@ -189,7 +189,7 @@ function! GetLineColFromOffset(text, offset)
         let char_count += len(line) + 1
         if char_count >= a:offset
             " Calculate column number (subtract the current line's characters and add 1 for the start position)
-            let col_num = a:offset - (char_count - len(line))
+            let col_num = a:offset - (char_count - len(line)) + 1
             return [line_num, col_num]
         endif
         let line_num += 1
