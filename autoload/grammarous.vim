@@ -299,7 +299,7 @@ function! s:invoke_check(range_start, ...)
     endif
 
     let cmdargs = printf(
-            \   '-c %s -l %s --api %s',
+            \   '-c %s -l %s %s',
             \   &fileencoding ? &fileencoding : &encoding,
             \   lang,
             \   substitute(tmpfile, '\\\s\@!', '\\\\', 'g')
