@@ -211,6 +211,8 @@ function! s:do_auto_preview()
         return
     endif
 
+    call grammarous#info_win#close()
+
     if !exists('b:grammarous_result') || empty(b:grammarous_result)
         autocmd! plugin-grammarous-auto-preview
         return
