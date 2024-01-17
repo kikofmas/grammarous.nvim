@@ -188,8 +188,9 @@ function! grammarous#get_errors_from_json(json)
         let error.shortMessage = match.shortMessage
         let error.fromx = match.context.offset
         let error.fromy = match.offset
+        let error.tox = match.context.offset + match.context.length
+        let error.toy = match.offset + match.length
         let error.replacements = map(match.replacements, 'v:val.value')
-        " Add other necessary fields from the JSON structure to the error dictionary
         call add(errors, error)
     endfor
     return errors
