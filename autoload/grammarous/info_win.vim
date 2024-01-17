@@ -179,7 +179,6 @@ function! grammarous#info_win#close()
     let cur_win = winnr()
     if exists('b:grammarous_preview_bufnr')
         let prev_win = bufwinnr(b:grammarous_preview_bufnr)
-        echo "prev_win: " . prev_win
     else
         let the_buf = s:lookup_preview_bufnr()
         if the_buf == -1
@@ -192,9 +191,11 @@ function! grammarous#info_win#close()
         return 0
     end
 
+    call grammarous#info_win#stop_auto_preview()
     execute prev_win . 'wincmd w'
     wincmd c
     execute cur_win . 'wincmd w'
+    call grammarous#info_win#start_auto_preview()
 
     return 1
 endfunction
