@@ -14,6 +14,11 @@ be blocked until the check has been done on Vim8+ or Neovim.
 ## Disclaimer
 This is started as a personal project because I couldn't make the plugin work correctly and is a way for me to learn Lua. If you find any issues please do report them but I can't promisse I'll be able to fix them. Pull Requests are more than welcome.
 
+## Changelog
+
+- Fix1: Fixed a crash that occured when trying to close the info window. This happened because the autocommand to open the info window would run while closing the window creating an error. Fixed it by stopping auto_preview, closing the info window, and then starting auto_preview again.
+- Feature1: Changed the behavior of info_window to automatically close itself when not hovering a error.
+
 ## Commands
 
 ```
