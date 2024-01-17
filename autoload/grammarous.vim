@@ -184,12 +184,13 @@ function! grammarous#get_errors_from_json(json)
     let errors = []
     for match in a:json.matches
         let error = {}
-        let error.message = match.message
+        let error.msg = match.message
         let error.shortMessage = match.shortMessage
         let error.fromx = match.context.offset
         let error.fromy = match.offset
         let error.tox = match.context.offset + match.context.length
         let error.toy = match.offset + match.length
+        let error.category = match.rule.category.name
         let error.replacements = map(match.replacements, 'v:val.value')
         call add(errors, error)
     endfor
