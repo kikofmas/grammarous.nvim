@@ -3,6 +3,7 @@ set cpo&vim
 
 let s:V = vital#grammarous#new()
 let s:XML = s:V.import('Web.XML')
+let s:JSON = json_decode(a:json_string)
 let s:O = s:V.import('OptionParser')
 let s:P = s:V.import('Process')
 let s:is_cygwin = has('win32unix')
@@ -180,6 +181,62 @@ function! s:set_errors_to_location_list() abort
     endtry
 endfunction
 
+function! grammarous#get_errors_from_json(json)
+    let errors = []
+    for match in a:json.matches
+        let error = {}
+        let error.message = match.message
+        let error.shortMessage = match.shortMessage
+        let error.fromx = match.context.offset
+        let error.fromy = match.offset
+        let error.replacements = map(match.replacements, 'v:val.value')
+        " Add other necessary fields from the JSON structure to the error dictionary
+        call add(errors, error)
+    endfor
+    return errors
+endfunction
+
+function! s:set_errors_from_json_string(json_string) abort
+    let b:grammarous_result = grammarous#get_errors_from_json(s:JSON)
+    let parsed = s:last_parsed_options
+
+    if s:is_comment_only(parsed['comments-only'])
+        call filter(b:grammarous_result, 'synIDattr(synID(v:val.fromy+1, v:val.fromx+1, 0), "name") =~? "comment"')
+    endif
+
+    redraw!
+    if empty(b:grammarous_result)
+        echomsg 'Yay! No grammatical errors detected.'
+        return
+    endif
+
+    let len = len(b:grammarous_result)
+    echomsg printf('Detected %d grammatical error%s', len, len > 1 ? 's' : '')
+    call grammarous#highlight_errors_in_current_buffer(b:grammarous_result)
+    if parsed['move-to-first-error']
+        call cursor(b:grammarous_result[0].fromy+1, b:grammarous_result[0].fromx+1)
+    endif
+
+    if g:grammarous#enable_spell_check
+        let s:saved_spell = &l:spell
+        setlocal spell
+    endif
+
+    if g:grammarous#use_location_list
+        call s:set_errors_to_location_list()
+    endif
+
+    if g:grammarous#show_first_error
+        call grammarous#create_update_info_window_of(b:grammarous_result)
+    endif
+
+    if has_key(g:grammarous#hooks, 'on_check')
+        call call(g:grammarous#hooks.on_check, [b:grammarous_result], g:grammarous#hooks)
+    endif
+endfunction
+
+
+
 function! s:set_errors_from_xml_string(xml) abort
     let b:grammarous_result = grammarous#get_errors_from_xml(s:XML.parse(substitute(a:xml, "\n", '', 'g')))
     let parsed = s:last_parsed_options
@@ -299,7 +356,7 @@ function! s:invoke_check(range_start, ...)
     endif
 
     let cmdargs = printf(
-            \   '-c %s -l %s %s',
+            \   '-c %s -l %s --json %s',
             \   &fileencoding ? &fileencoding : &encoding,
             \   lang,
             \   substitute(tmpfile, '\\\s\@!', '\\\\', 'g')
