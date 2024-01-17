@@ -2,7 +2,6 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 let s:V = vital#grammarous#new()
-let s:XML = s:V.import('Web.XML')
 let s:O = s:V.import('OptionParser')
 let s:P = s:V.import('Process')
 let s:is_cygwin = has('win32unix')
@@ -50,7 +49,7 @@ let s:SID = s:get_SID()
 delfunction s:get_SID
 
 function! grammarous#_import_vital_modules()
-    return [s:XML, s:O, s:P]
+    return [s:O, s:P]
 endfunction
 
 function! grammarous#error(...)
@@ -263,57 +262,15 @@ function! s:set_errors_from_json_string(json_string) abort
     endif
 endfunction
 
-
-
-function! s:set_errors_from_xml_string(xml) abort
-    let b:grammarous_result = grammarous#get_errors_from_xml(s:XML.parse(substitute(a:xml, "\n", '', 'g')))
-    let parsed = s:last_parsed_options
-
-    if s:is_comment_only(parsed['comments-only'])
-        call filter(b:grammarous_result, 'synIDattr(synID(v:val.fromy+1, v:val.fromx+1, 0), "name") =~? "comment"')
-    endif
-
-    redraw!
-    if empty(b:grammarous_result)
-        echomsg 'Yay! No grammatical errors detected.'
-        return
-    endif
-
-    let len = len(b:grammarous_result)
-    echomsg printf('Detected %d grammatical error%s', len, len > 1 ? 's' : '')
-    call grammarous#highlight_errors_in_current_buffer(b:grammarous_result)
-    if parsed['move-to-first-error']
-        call cursor(b:grammarous_result[0].fromy+1, b:grammarous_result[0].fromx+1)
-    endif
-
-    if g:grammarous#enable_spell_check
-        let s:saved_spell = &l:spell
-        setlocal spell
-    endif
-
-    if g:grammarous#use_location_list
-        call s:set_errors_to_location_list()
-    endif
-
-    if g:grammarous#show_first_error
-        call grammarous#create_update_info_window_of(b:grammarous_result)
-    endif
-
-    if has_key(g:grammarous#hooks, 'on_check')
-        call call(g:grammarous#hooks.on_check, [b:grammarous_result], g:grammarous#hooks)
-    endif
-endfunction
-
 function! s:on_check_done_vim8(channel) abort
-    let xml = ''
+    let json = ''
     while ch_status(a:channel, {'part' : 'out'}) ==# 'buffered'
-        let xml .= ch_read(a:channel)
+        let json .= ch_read(a:channel)
     endwhile
-    if xml ==# ''
+    if json ==# ''
         return
     endif
-    " call s:set_errors_from_xml_string(xml)
-    call s:set_errors_from_json_string(xml)
+    call s:set_errors_from_json_string(json)
 endfunction
 
 function! s:on_check_exit_vim8(channel, status) abort
@@ -333,7 +290,6 @@ function! s:on_exit_nvim(job, status, event) abort dict
         return
     endif
 
-    " call s:set_errors_from_xml_string(self._stdout)
     call s:set_errors_from_json_string(self._stdout)
 endfunction
 
@@ -437,15 +393,14 @@ function! s:invoke_check(range_start, ...)
         return
     endif
 
-    let xml = s:P.system(cmd)
+    let json = s:P.system(cmd)
     call delete(tmpfile)
 
     if s:P.get_last_status()
-        call grammarous#error("Command '%s' failed:\n%s", cmd, xml)
+        call grammarous#error("Command '%s' failed:\n%s", cmd, json)
         return
     endif
-    " call s:set_errors_from_xml_string(xml)
-    call s:set_errors_from_json_string(xml)
+    call s:set_errors_from_json_string(json)
 endfunction
 
 function! s:sanitize(s)
@@ -459,25 +414,6 @@ function! grammarous#generate_highlight_pattern(error)
     let the_error = s:sanitize(rest[: a:error.errorlength-1])
     let rest = s:sanitize(rest[a:error.errorlength :])
     return '\V' . prefix . '\zs' . the_error . '\ze' . rest
-endfunction
-
-function! s:unescape_xml(str)
-    let s = substitute(a:str, '&quot;', '"',  'g')
-    let s = substitute(s, '&apos;', "'",  'g')
-    let s = substitute(s, '&gt;',   '>',  'g')
-    let s = substitute(s, '&lt;',   '<',  'g')
-    return  substitute(s, '&amp;',  '\&', 'g')
-endfunction
-
-function! s:unescape_error(err)
-    for e in ['context', 'msg', 'replacements']
-        let a:err[e] = s:unescape_xml(a:err[e])
-    endfor
-    return a:err
-endfunction
-
-function! grammarous#get_errors_from_xml(xml)
-    return map(filter(a:xml.childNodes(), 'v:val.name ==# "error"'), 's:unescape_error(v:val.attr)')
 endfunction
 
 function! s:matcherrpos(...)

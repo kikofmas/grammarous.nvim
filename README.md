@@ -16,8 +16,10 @@ This is started as a personal project because I couldn't make the plugin work co
 
 ## Changelog
 
+*January 2024*
 - Fix1: Fixed a crash that occured when trying to close the info window. This happened because the autocommand to open the info window would run while closing the window creating an error. Fixed it by stopping auto_preview, closing the info window, and then starting auto_preview again.
 - Feature1: Changed the behavior of info_window to automatically close itself when not hovering a error.
+- Fix2: Changed parser to json so it supports the latest LanguageTool verions. XML was deprecated.
 
 ## Commands
 
