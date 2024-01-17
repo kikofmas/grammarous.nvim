@@ -3,7 +3,6 @@ set cpo&vim
 
 let s:V = vital#grammarous#new()
 let s:XML = s:V.import('Web.XML')
-let s:JSON = json_decode(a:json_string)
 let s:O = s:V.import('OptionParser')
 let s:P = s:V.import('Process')
 let s:is_cygwin = has('win32unix')
@@ -197,7 +196,7 @@ function! grammarous#get_errors_from_json(json)
 endfunction
 
 function! s:set_errors_from_json_string(json_string) abort
-    let b:grammarous_result = grammarous#get_errors_from_json(s:JSON)
+    let b:grammarous_result = grammarous#get_errors_from_json(json_decode(a:json_string))
     let parsed = s:last_parsed_options
 
     if s:is_comment_only(parsed['comments-only'])
