@@ -179,7 +179,7 @@ function! grammarous#info_win#close()
     let cur_win = winnr()
     if exists('b:grammarous_preview_bufnr')
         let prev_win = bufwinnr(b:grammarous_preview_bufnr)
-        print("prev_win: " . prev_win)
+        echo "prev_win: " . prev_win
     else
         let the_buf = s:lookup_preview_bufnr()
         if the_buf == -1
