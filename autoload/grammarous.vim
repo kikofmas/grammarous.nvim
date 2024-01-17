@@ -305,7 +305,7 @@ function! s:on_exit_nvim(job, status, event) abort dict
     endif
 
     " call s:set_errors_from_xml_string(self._stdout)
-    call s:set_errors_from_json_string(xml)
+    call s:set_errors_from_json_string(self._stdout)
 endfunction
 
 function! s:on_output_nvim(job, lines, event) abort dict
