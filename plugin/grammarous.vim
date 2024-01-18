@@ -17,10 +17,4 @@ nnoremap <silent><Plug>(grammarous-disable-category) :<C-u>call grammarous#disab
 nnoremap <silent><Plug>(grammarous-move-to-next-error) :<C-u>call grammarous#move_to_next_error(getpos('.')[1 : 2], b:grammarous_result)<CR>
 nnoremap <silent><Plug>(grammarous-move-to-previous-error) :<C-u>call grammarous#move_to_previous_error(getpos('.')[1 : 2], b:grammarous_result)<CR>
 
-try
-    call operator#user#define('grammarous', 'operator#grammarous#do')
-catch /^Vim\%((\a\+)\)\=:E117/
-    " vim-operator-user is not installed
-endtry
-
 let g:loaded_grammarous = 1

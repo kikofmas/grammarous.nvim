@@ -93,13 +93,6 @@ This mapping is available when [vim-operator-user](https://github.com/kana/vim-o
 | ----------------------------- |:-------------------------------------- |
 | `<Plug>(operator-grammarous)` | Execute grammar check to a text object |
 
-## Fix examples
-
-- [vim-themis](https://github.com/rhysd/vim-themis/commit/b2f838b29f47180ccee50488e01d6774a21d0c03)
-- [unite.vim](https://github.com/rhysd/unite.vim/commit/5716eac38781e7a233c98f2a3d7aee8909326791)
-- [vim-quickrun](https://github.com/rhysd/vim-quickrun/commit/236c753e0572266670d176e667054d55ad52a3f3)
-- [neosnippet.vim](https://github.com/rhysd/neosnippet/commit/c72e26e50ccf53f9d66a31fd9d70696c85c62873)
-
 
 ## FAQ
 
@@ -218,21 +211,12 @@ If it fails, you should install it manually. Please download zip file of Languag
 
 ## Requirements
 
-- Java8+ (required)
-- [vimproc.vim](https://github.com/Shougo/vimproc.vim) (optional for Vim 8.0.25 or earlier on Windows)
-- [unite.vim](https://github.com/Shougo/unite.vim) (optional)
-- [vim-operator-user](https://github.com/kana/vim-operator-user) (optional)
-
-
-## Future
-
-- __Ignore specific regions__ : Enable to specify the region which vim-grammarous should not check. It is helpful for GFM's fenced code blocks.
-- __Incremental grammarous check__ : Check only the sentences you input while starting from entering and leaving insert mode.
+- Java8+ (required to run LanguageTool jar)
 
 
 ## Contribution
 
-If you find some bugs, please report it to [issues page](https://github.com/rhysd/vim-grammarous/issues).
+If you find some bugs, please report it on the [issues page](https://github.com/rhysd/vim-grammarous/issues).
 Pull requests are welcome. None of them is too short.
 
 
