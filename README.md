@@ -126,6 +126,17 @@ For example, below setting enables `PASSIVE_VOICE` rule in all filetypes.
 let g:grammarous#enabled_rules = {'*' : ['PASSIVE_VOICE']}
 ```
 
+### How can I pass my own rules file?
+
+Please use `g:grammarous#custom_rules` to pass the name of a file.
+
+For example, to set `path/to/config/data/languagetool/rules.xml` as the rulefile.
+
+```vim 
+let config_path = stdpath('config')
+let g:grammarous#custom_rules = config_path . '/data/languagetool/rules.xml'
+```
+
 ### Some rules annoy me.
 
 Please use `g:grammarous#disabled_rules` to disable specific rules.

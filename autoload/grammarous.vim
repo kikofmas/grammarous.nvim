@@ -20,6 +20,7 @@ let g:grammarous#info_win_direction              = get(g:, 'grammarous#info_win_
 let g:grammarous#use_fallback_highlight          = get(g:, 'grammarous#use_fallback_highlight', !exists('*matchaddpos'))
 let g:grammarous#enabled_rules                   = get(g:, 'grammarous#enabled_rules', {})
 let g:grammarous#disabled_rules                  = get(g:, 'grammarous#disabled_rules', {'*' : ['WHITESPACE_RULE', 'EN_QUOTES']})
+let g:grammarous#custom_rules                    = get(g:, 'grammarous#custom_rules', "")
 let g:grammarous#enabled_categories              = get(g:, 'grammarous#enabled_categories', {})
 let g:grammarous#disabled_categories             = get(g:, 'grammarous#disabled_categories', {})
 let g:grammarous#default_comments_only_filetypes = get(g:, 'grammarous#default_comments_only_filetypes', {'*' : 0})
@@ -347,6 +348,16 @@ function! s:invoke_check(range_start, ...)
             \   lang,
             \   substitute(tmpfile, '\\\s\@!', '\\\\', 'g')
             \ )
+
+    if g:grammarous#custom_rules !=# ''
+        let custom_rules = printf("%s", substitute(g:grammarous#custom_rules, ' ', '\\ ', 'g'))
+        if !filereadable(g:grammarous#custom_rules)
+            call grammarous#error("Custom rules file '%s' does not exist or is not readable", g:grammarous#custom_rules)
+            return
+        else
+            let cmdargs = '--rulefile ' . custom_rules . ' ' . cmdargs
+        endif
+    endif 
 
     let disabled_rules = get(g:grammarous#disabled_rules, &filetype, get(g:grammarous#disabled_rules, '*', []))
     if !empty(disabled_rules)
